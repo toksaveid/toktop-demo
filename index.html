@@ -224,17 +224,26 @@
     let prompt = '';
     if(p) prompt += p + '\n\n';
 
-    if(cat === 'image'){
-      // structure: subject, style, camera, lighting, color, mood, output settings
-      prompt += `Generate a detailed image prompt for ${m ? m + ' — ' : ''}request:\n`;
-      prompt += `Subject/Scene: ${g}.\n`;
-      if(d) prompt += `Details: ${d}.\n`;
-      prompt += `Style/Tone: ${t}.\n`;
-      // add length-based details
-      if(len !== 'short') prompt += `Composition: close-up, cinematic framing, intricate details.\n`;
-      if(len === 'long') prompt += `Camera/Rendering: high-resolution, film grain, octane render, 8k, photorealistic.\n`;
-      prompt += `Deliverable: concise prompt string for image model (no extra commentary).`;
-    } else if(cat === 'chat'){
+   if(cat === 'image'){
+  // produce only the concise single-line prompt for image models
+  let parts = [];
+  // subject / goal
+  parts.push(g);
+  // extra details
+  if(d) parts.push(d);
+  // tone
+  if(t && t.toLowerCase() !== 'netral') parts.push(t);
+  // model hint
+  if(m) parts.push(`model:${m}`);
+  // length hint -> add more descriptors when long
+  if(len === 'medium') parts.push('cinematic, detailed');
+  if(len === 'long') parts.push('ultra-detailed, photorealistic, 8k, high detail');
+  // final assembly
+  let one = parts.join(', ');
+  // optional polish: capitalize first letter
+  one = one.charAt(0).toUpperCase() + one.slice(1);
+  prompt = one;
+} else if(cat === 'chat'){
       prompt += `You are a helpful assistant.\nTask: ${g}.\n`;
       if(d) prompt += `Context/details: ${d}.\n`;
       prompt += `Tone: ${t}. Length: ${len}.\n`;
