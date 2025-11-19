@@ -1,128 +1,358 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>TopUp Center — Demo</title>
-
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>PromptForge — AI Prompt Generator (Demo)</title>
+<meta name="description" content="PromptForge: Bikin prompt AI (image, chat, copywriting) cepat & rapi. Pilih kategori, isi detail, generate, copy, download." />
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: Arial, sans-serif;
-        background: #0b0f16;
-        color: #e6eef6;
-        padding: 20px;
-    }
-    .container {
-        max-width: 480px;
-        margin: auto;
-    }
-    h1 {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-    .card {
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.15);
-        padding: 20px;
-        border-radius: 12px;
-        margin-top: 15px;
-        backdrop-filter: blur(10px);
-    }
-    select, input {
-        width: 100%;
-        padding: 12px;
-        margin-top: 10px;
-        background: rgba(255,255,255,0.08);
-        border: 1px solid rgba(255,255,255,0.2);
-        border-radius: 8px;
-        color: #fff;
-    }
-    button {
-        width: 100%;
-        padding: 14px;
-        margin-top: 15px;
-        border: none;
-        background: #6c47ff;
-        color: #fff;
-        border-radius: 8px;
-        font-size: 16px;
-        cursor: pointer;
-    }
-    button:hover {
-        background: #7d56ff;
-    }
-    footer {
-        margin-top: 30px;
-        text-align: center;
-        opacity: 0.6;
-    }
+  :root{
+    --bg:#071018; --card:#0f1620; --muted:#9aa6b2; --accent:#7c4dff; --accent2:#4f46e5; --glass:rgba(255,255,255,0.03); --radius:12px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#071018 0%,#07131a 100%);color:#e6eef6;padding:20px;min-height:100vh}
+  .wrap{max-width:980px;margin:0 auto}
+  header{display:flex;gap:12px;align-items:center;margin-bottom:18px}
+  .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:18px}
+  h1{margin:0;font-size:20px}
+  .lead{margin:4px 0 0;color:var(--muted);font-size:13px}
+  .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:16px;border-radius:var(--radius);margin-top:12px;border:1px solid rgba(255,255,255,0.03)}
+  label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+  input[type="text"],textarea,select{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;outline:none}
+  textarea{min-height:100px;resize:vertical}
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  .col{flex:1;min-width:220px}
+  .controls{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+  .btn{background:linear-gradient(90deg,var(--accent),var(--accent2));border:0;padding:10px 14px;border-radius:10px;color:white;font-weight:700;cursor:pointer}
+  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+  .small{font-size:13px;color:var(--muted)}
+  .result{margin-top:14px}
+  pre{white-space:pre-wrap;word-break:break-word;background:var(--glass);padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);font-family:monospace;color:#dbeafe}
+  .template-list{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+  .chip{background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,0.02);cursor:pointer}
+  footer{margin-top:18px;color:var(--muted);font-size:13px}
+  .hint{color:var(--muted);font-size:13px;margin-top:8px}
+  .flex-between{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  @media(max-width:600px){ .row{flex-direction:column} .col{min-width:100%} }
 </style>
-
 </head>
 <body>
-
-<div class="container">
-
-    <h1>TopUp Center (Demo)</h1>
+  <div class="wrap">
+    <header>
+      <div class="logo">PF</div>
+      <div>
+        <h1>PromptForge</h1>
+        <p class="lead">Bikin prompt AI cepat: image, chat, marketing, copywriting. (Demo)</p>
+      </div>
+    </header>
 
     <div class="card">
-        <label>Pilih Game</label>
-        <select id="game">
-            <option value="ml">Mobile Legends</option>
-            <option value="ff">Free Fire</option>
-            <option value="gi">Genshin Impact</option>
-        </select>
+      <div class="flex-between">
+        <div>
+          <label for="category">Kategori Prompt</label>
+          <select id="category">
+            <option value="image">Image — Generative / Midjourney / Stable</option>
+            <option value="chat">Chat — Assistant / ChatGPT</option>
+            <option value="marketing">Marketing — Ad / Caption / Hook</option>
+            <option value="copy">Copywriting — Product description</option>
+            <option value="code">Code — Refactor / Explain / Generate</option>
+            <option value="resume">Resume — Bio / CV</option>
+          </select>
+          <div class="hint">Pilih jenis prompt yang mau di-generate.</div>
+        </div>
 
-        <label>ID Player</label>
-        <input type="text" id="uid" placeholder="Contoh: 123456789" />
+        <div style="width:220px">
+          <label for="tone">Tone / Gaya</label>
+          <select id="tone">
+            <option>Netral</option>
+            <option>Santai / Gen-Z</option>
+            <option>Resmi / Profesional</option>
+            <option>Persuasif / Jualan</option>
+            <option>Lucu / Santai</option>
+          </select>
+        </div>
+      </div>
 
-        <label>Pilih Nominal</label>
-        <select id="nominal">
-            <option value="5000">5.000 - 11 Diamonds</option>
-            <option value="10000">10.000 - 23 Diamonds</option>
-            <option value="20000">20.000 - 46 Diamonds</option>
-            <option value="50000">50.000 - 140 Diamonds</option>
-        </select>
+      <div style="margin-top:12px" class="row">
+        <div class="col">
+          <label for="goal">Tujuan / Intent</label>
+          <input id="goal" type="text" placeholder="Contoh: Buat prompt image anime cyberpunk, 2 orang, neon, portrait"/>
+        </div>
+        <div class="col">
+          <label for="detail">Detail tambahan (optional)</label>
+          <input id="detail" type="text" placeholder="Contoh: lighting dramatic, high contrast, cinematic lens"/>
+        </div>
+      </div>
 
-        <button onclick="bayar()">Bayar Sekarang</button>
+      <div style="margin-top:12px" class="row">
+        <div class="col">
+          <label for="length">Panjang (Detail)</label>
+          <select id="length">
+            <option value="short">Pendek — ringkas</option>
+            <option value="medium" selected>Sedang — cukup detail</option>
+            <option value="long">Panjang — sangat detail</option>
+          </select>
+        </div>
+        <div class="col">
+          <label for="model">Target Model (opsional)</label>
+          <input id="model" type="text" placeholder="Contoh: gpt-4o, midjourney v6, sd-xl"/>
+        </div>
+      </div>
+
+      <div style="margin-top:12px" class="row">
+        <div style="flex:1">
+          <label for="prefix">Tambahan Sistem / Prefix (opsional)</label>
+          <input id="prefix" type="text" placeholder="Contoh: You are a professional photographer and cinematographer..."/>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="gen" class="btn">Generate Prompt</button>
+        <button id="copyBtn" class="btn ghost">Copy</button>
+        <button id="downloadBtn" class="btn ghost">Download .txt</button>
+        <button id="saveTpl" class="btn ghost">Save Template</button>
+        <div style="margin-left:auto" class="small">Templates saved locally</div>
+      </div>
+
+      <div class="result">
+        <label>Prompt Output</label>
+        <pre id="out">Tekan "Generate Prompt" untuk mulai </pre>
+      </div>
+
+      <div class="hint">Butuh inspirasi? Klik kategori cepat di bawah:</div>
+      <div class="template-list" id="quickChips"></div>
+
+      <div style="margin-top:12px">
+        <label>Saved Templates</label>
+        <div id="tplList" class="template-list small"></div>
+      </div>
+
     </div>
 
-    <div class="card" id="result" style="display:none;">
-        <h3>Pesanan Diterima!</h3>
-        <p id="orderText"></p>
-        <p><b>(Demo aja, tidak memproses pembayaran)</b></p>
-    </div>
-
-    <footer>© 2025 TopUp Center Demo</footer>
-
-</div>
+    <footer>
+      <div class="small">PromptForge — Demo. Jangan simpan API key sensitif di client. Templates tersimpan di browser (localStorage).</div>
+    </footer>
+  </div>
 
 <script>
-function bayar() {
-    let game = document.getElementById("game").value;
-    let uid = document.getElementById("uid").value;
-    let nominal = document.getElementById("nominal").value;
+(() => {
+  const category = document.getElementById('category');
+  const tone = document.getElementById('tone');
+  const goal = document.getElementById('goal');
+  const detail = document.getElementById('detail');
+  const lengthSel = document.getElementById('length');
+  const model = document.getElementById('model');
+  const prefix = document.getElementById('prefix');
+  const out = document.getElementById('out');
+  const gen = document.getElementById('gen');
+  const copyBtn = document.getElementById('copyBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const saveTpl = document.getElementById('saveTpl');
+  const tplList = document.getElementById('tplList');
+  const quickChips = document.getElementById('quickChips');
 
-    if (uid === "") {
-        alert("Masukkan ID player dulu bro");
-        return;
+  // Quick examples per kategori
+  const EXAMPLES = {
+    image:[
+      'anime cyberpunk portrait, 2 characters, neon, cinematic lighting',
+      'landscape, sunset, photoreal, ultra-detailed, 8k',
+      'chibi mascot, pastel colors, kawaii style'
+    ],
+    chat:[
+      'Buat summary sederhana dari artikel panjang ini',
+      'Simulasikan interview job sebagai backend engineer',
+      'Jadi asisten belajar matematika: jelaskan integral dengan analogi'
+    ],
+    marketing:[
+      'Caption IG untuk produk skincare: anti-aging, short hook',
+      'Headline email promo 20% off, catchy, personalization',
+      '3 variant ad copy untuk Facebook, A/B test'
+    ],
+    copy:[
+      'Deskripsi produk ringkas untuk listing e-commerce, 3 lines',
+      'Bullet point fitur untuk landing page SaaS',
+      'FAQ singkat untuk produk elektronik'
+    ],
+    code:[
+      'Refactor function JS untuk performance, explain changes',
+      'Generate REST API skeleton in Node.js Express with auth',
+      'Write unit tests for given Python function'
+    ],
+    resume:[
+      'Buat summary profesional untuk Backend Engineer 3 tahun experience',
+      'Tuliskan bullet achievement untuk Product Manager',
+      'Edit bio LinkedIn jadi lebih menarik dan singkat'
+    ]
+  };
+
+  // render quick chips
+  function renderChips(){
+    quickChips.innerHTML = '';
+    const arr = EXAMPLES[category.value] || [];
+    arr.forEach(s => {
+      const el = document.createElement('div');
+      el.className = 'chip';
+      el.textContent = s;
+      el.onclick = ()=> { goal.value = s; detail.value=''; };
+      quickChips.appendChild(el);
+    });
+  }
+  category.addEventListener('change', renderChips);
+  renderChips();
+
+  // helper: length detail mapping
+  const LENGTH_MAP = {
+    short: { image: 1, chat: 1, marketing:1, copy:1, code:1, resume:1 },
+    medium: { image: 2, chat: 2, marketing:2, copy:2, code:2, resume:2 },
+    long: { image: 3, chat: 3, marketing:3, copy:3, code:3, resume:3 }
+  };
+
+  function makePrompt(){
+    const cat = category.value;
+    const t = tone.value;
+    const g = goal.value.trim();
+    const d = detail.value.trim();
+    const len = lengthSel.value;
+    const m = model.value.trim();
+    const p = prefix.value.trim();
+
+    if(!g){
+      return 'Tolong isi kolom "Tujuan / Intent" dulu (misal: buat prompt image anime...).';
     }
 
-    let gameName = {
-        ml: "Mobile Legends",
-        ff: "Free Fire",
-        gi: "Genshin Impact"
-    }[game];
+    // base templates per category (human-friendly)
+    let prompt = '';
+    if(p) prompt += p + '\n\n';
 
-    document.getElementById("result").style.display = "block";
-    document.getElementById("orderText").innerHTML =
-        `Game: <b>${gameName}</b><br>ID: <b>${uid}</b><br>Nominal: <b>Rp ${nominal}</b><br><br>Status: <span style="color:#6c47ff;">Menunggu Pembayaran</span>`;
+    if(cat === 'image'){
+      // structure: subject, style, camera, lighting, color, mood, output settings
+      prompt += `Generate a detailed image prompt for ${m ? m + ' — ' : ''}request:\n`;
+      prompt += `Subject/Scene: ${g}.\n`;
+      if(d) prompt += `Details: ${d}.\n`;
+      prompt += `Style/Tone: ${t}.\n`;
+      // add length-based details
+      if(len !== 'short') prompt += `Composition: close-up, cinematic framing, intricate details.\n`;
+      if(len === 'long') prompt += `Camera/Rendering: high-resolution, film grain, octane render, 8k, photorealistic.\n`;
+      prompt += `Deliverable: concise prompt string for image model (no extra commentary).`;
+    } else if(cat === 'chat'){
+      prompt += `You are a helpful assistant.\nTask: ${g}.\n`;
+      if(d) prompt += `Context/details: ${d}.\n`;
+      prompt += `Tone: ${t}. Length: ${len}.\n`;
+      prompt += `Provide step-by-step answer and examples if relevant.`;
+      if(m) prompt = `Model: ${m}\n` + prompt;
+    } else if(cat === 'marketing'){
+      prompt += `Create ${len==='short'?'short':'detailed'} marketing copy based on: ${g}.\n`;
+      if(d) prompt += `Extra: ${d}.\n`;
+      prompt += `Tone: ${t}. Output: 3 variants (short headline, 2-line description, CTA).`;
+    } else if(cat === 'copy'){
+      prompt += `Write product copy: ${g}.\n`;
+      if(d) prompt += `Info: ${d}.\n`;
+      prompt += `Tone: ${t}. Format: bullets + 1 short paragraph.`;
+    } else if(cat === 'code'){
+      prompt += `Task: ${g}.\n`;
+      if(d) prompt += `Details: ${d}.\n`;
+      prompt += `Provide code examples, explanation, and complexity analysis. Format code blocks.`;
+      if(m) prompt = `Target runtime: ${m}\n` + prompt;
+    } else if(cat === 'resume'){
+      prompt += `Create a professional resume summary / bullets for: ${g}.\n`;
+      if(d) prompt += `Achievements/skills to highlight: ${d}.\n`;
+      prompt += `Tone: ${t}. Output: 3 variations (short, medium, long).`;
+    } else {
+      prompt = `${g}\n${d?d+'\n':''}Tone: ${t}\nLength: ${len}`;
+    }
 
-    window.scrollTo(0, document.body.scrollHeight);
-}
+    // polish: final short prompt if image -> condense to single line after instruction
+    if(cat === 'image'){
+      // try to create final one-line prompt
+      let one = `${g}`;
+      if(d) one += `, ${d}`;
+      one += `, ${t}`;
+      if(len==='long') one += ', ultra-detailed, 8k, photorealistic';
+      if(m) one += ` (model: ${m})`;
+      prompt += `\n\n--\nFinal concise prompt:\n${one}`;
+    }
+
+    return prompt;
+  }
+
+  gen.addEventListener('click', ()=>{
+    out.textContent = 'Membuat prompt...';
+    setTimeout(()=> {
+      out.textContent = makePrompt();
+    },120);
+  });
+
+  copyBtn.addEventListener('click', async ()=>{
+    try{
+      await navigator.clipboard.writeText(out.textContent);
+      copyBtn.textContent = 'Copied!';
+      setTimeout(()=> copyBtn.textContent='Copy',900);
+    }catch(e){
+      alert('Gagal copy. Coba manual select & copy.');
+    }
+  });
+
+  downloadBtn.addEventListener('click', ()=>{
+    const blob = new Blob([out.textContent], {type:'text/plain'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'prompt.txt';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  });
+
+  // templates storage
+  const TPL_KEY = 'pf_templates_v1';
+  function loadTemplates(){ try{ return JSON.parse(localStorage.getItem(TPL_KEY)||'[]'); }catch(e){return []} }
+  function saveTemplates(arr){ localStorage.setItem(TPL_KEY, JSON.stringify(arr)); renderTemplates(); }
+  function renderTemplates(){
+    tplList.innerHTML = '';
+    const arr = loadTemplates();
+    if(!arr.length){ tplList.innerHTML = '<div class="small muted">No saved templates</div>'; return; }
+    arr.forEach((t, i) => {
+      const el = document.createElement('div'); el.className='chip';
+      el.textContent = t.name;
+      el.onclick = ()=> {
+        // load template into form
+        category.value = t.category; tone.value = t.tone; goal.value = t.goal; detail.value = t.detail;
+        lengthSel.value = t.length; model.value = t.model; prefix.value = t.prefix;
+        renderChips();
+        out.textContent = 'Template loaded — tekan Generate.';
+      };
+      const del = document.createElement('span'); del.textContent=' '; del.style.marginLeft='8px'; del.style.cursor='pointer';
+      del.onclick = (e)=>{ e.stopPropagation(); const arr=loadTemplates(); arr.splice(i,1); saveTemplates(arr); };
+      el.appendChild(del);
+      tplList.appendChild(el);
+    });
+  }
+  renderTemplates();
+
+  saveTpl.addEventListener('click', ()=>{
+    const name = prompt('Nama template (singkat):');
+    if(!name) return;
+    const arr = loadTemplates();
+    arr.push({
+      name,
+      category: category.value,
+      tone: tone.value,
+      goal: goal.value,
+      detail: detail.value,
+      length: lengthSel.value,
+      model: model.value,
+      prefix: prefix.value
+    });
+    saveTemplates(arr);
+  });
+
+  // initial filler for convenience
+  if(!localStorage.getItem('pf_welcome')) {
+    localStorage.setItem('pf_welcome','1');
+    goal.value = EXAMPLES[category.value][0] || '';
+    detail.value = '';
+  }
+
+})();
 </script>
-
 </body>
 </html>
