@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>PromptForge — AI Prompt Generator (Demo)</title>
+<title>PromptForge â€” AI Prompt Generator (Demo)</title>
 <meta name="description" content="PromptForge: Bikin prompt AI (image, chat, copywriting) cepat & rapi. Pilih kategori, isi detail, generate, copy, download." />
 <style>
   :root{
@@ -51,12 +51,12 @@
         <div>
           <label for="category">Kategori Prompt</label>
           <select id="category">
-            <option value="image">Image — Generative / Midjourney / Stable</option>
-            <option value="chat">Chat — Assistant / ChatGPT</option>
-            <option value="marketing">Marketing — Ad / Caption / Hook</option>
-            <option value="copy">Copywriting — Product description</option>
-            <option value="code">Code — Refactor / Explain / Generate</option>
-            <option value="resume">Resume — Bio / CV</option>
+            <option value="image">Image â€” Generative / Midjourney / Stable</option>
+            <option value="chat">Chat â€” Assistant / ChatGPT</option>
+            <option value="marketing">Marketing â€” Ad / Caption / Hook</option>
+            <option value="copy">Copywriting â€” Product description</option>
+            <option value="code">Code â€” Refactor / Explain / Generate</option>
+            <option value="resume">Resume â€” Bio / CV</option>
           </select>
           <div class="hint">Pilih jenis prompt yang mau di-generate.</div>
         </div>
@@ -88,9 +88,9 @@
         <div class="col">
           <label for="length">Panjang (Detail)</label>
           <select id="length">
-            <option value="short">Pendek — ringkas</option>
-            <option value="medium" selected>Sedang — cukup detail</option>
-            <option value="long">Panjang — sangat detail</option>
+            <option value="short">Pendek â€” ringkas</option>
+            <option value="medium" selected>Sedang â€” cukup detail</option>
+            <option value="long">Panjang â€” sangat detail</option>
           </select>
         </div>
         <div class="col">
@@ -130,7 +130,7 @@
     </div>
 
     <footer>
-      <div class="small">PromptForge — Demo. Jangan simpan API key sensitif di client. Templates tersimpan di browser (localStorage).</div>
+      <div class="small">PromptForge â€” Demo. Jangan simpan API key sensitif di client. Templates tersimpan di browser (localStorage).</div>
     </footer>
   </div>
 
@@ -208,81 +208,86 @@
   };
 
   function makePrompt(){
-    const cat = category.value;
-    const t = tone.value;
-    const g = goal.value.trim();
-    const d = detail.value.trim();
-    const len = lengthSel.value;
-    const m = model.value.trim();
-    const p = prefix.value.trim();
+  function makePrompt(){
+  const cat = category.value;
+  const t = tone.value;
+  const g = goal.value.trim();
+  const d = detail.value.trim();
+  const len = lengthSel.value;
+  const m = model.value.trim();
+  const p = prefix.value.trim();
 
-    if(!g){
-      return 'Tolong isi kolom "Tujuan / Intent" dulu (misal: buat prompt image anime...).';
-    }
-
-    // base templates per category (human-friendly)
-    let prompt = '';
-    if(p) prompt += p + '\n\n';
-
-   if(cat === 'image'){
-  // produce only the concise single-line prompt for image models
-  let parts = [];
-  // subject / goal
-  parts.push(g);
-  // extra details
-  if(d) parts.push(d);
-  // tone
-  if(t && t.toLowerCase() !== 'netral') parts.push(t);
-  // model hint
-  if(m) parts.push(`model:${m}`);
-  // length hint -> add more descriptors when long
-  if(len === 'medium') parts.push('cinematic, detailed');
-  if(len === 'long') parts.push('ultra-detailed, photorealistic, 8k, high detail');
-  // final assembly
-  let one = parts.join(', ');
-  // optional polish: capitalize first letter
-  one = one.charAt(0).toUpperCase() + one.slice(1);
-  prompt = one;
-} else if(cat === 'chat'){
-      prompt += `You are a helpful assistant.\nTask: ${g}.\n`;
-      if(d) prompt += `Context/details: ${d}.\n`;
-      prompt += `Tone: ${t}. Length: ${len}.\n`;
-      prompt += `Provide step-by-step answer and examples if relevant.`;
-      if(m) prompt = `Model: ${m}\n` + prompt;
-    } else if(cat === 'marketing'){
-      prompt += `Create ${len==='short'?'short':'detailed'} marketing copy based on: ${g}.\n`;
-      if(d) prompt += `Extra: ${d}.\n`;
-      prompt += `Tone: ${t}. Output: 3 variants (short headline, 2-line description, CTA).`;
-    } else if(cat === 'copy'){
-      prompt += `Write product copy: ${g}.\n`;
-      if(d) prompt += `Info: ${d}.\n`;
-      prompt += `Tone: ${t}. Format: bullets + 1 short paragraph.`;
-    } else if(cat === 'code'){
-      prompt += `Task: ${g}.\n`;
-      if(d) prompt += `Details: ${d}.\n`;
-      prompt += `Provide code examples, explanation, and complexity analysis. Format code blocks.`;
-      if(m) prompt = `Target runtime: ${m}\n` + prompt;
-    } else if(cat === 'resume'){
-      prompt += `Create a professional resume summary / bullets for: ${g}.\n`;
-      if(d) prompt += `Achievements/skills to highlight: ${d}.\n`;
-      prompt += `Tone: ${t}. Output: 3 variations (short, medium, long).`;
-    } else {
-      prompt = `${g}\n${d?d+'\n':''}Tone: ${t}\nLength: ${len}`;
-    }
-
-    // polish: final short prompt if image -> condense to single line after instruction
-    if(cat === 'image'){
-      // try to create final one-line prompt
-      let one = `${g}`;
-      if(d) one += `, ${d}`;
-      one += `, ${t}`;
-      if(len==='long') one += ', ultra-detailed, 8k, photorealistic';
-      if(m) one += ` (model: ${m})`;
-      prompt += `\n\n--\nFinal concise prompt:\n${one}`;
-    }
-
-    return prompt;
+  if(!g){
+    return 'Tolong isi kolom "Tujuan / Intent" dulu (misal: buat prompt image anime...).';
   }
+
+  // Jika user minta concise output only (kita paksa selalu concise untuk image)
+  if(cat === 'image'){
+    const parts = [];
+
+    // prefix (jika ada, masukkan sebagai instruksi singkat di awal)
+    if(p) parts.push(p.replace(/\s+/g,' ').trim());
+
+    // subject / main goal
+    parts.push(g);
+
+    // additional details
+    if(d) parts.push(d);
+
+    // tone (jika bukan netral)
+    if(t && t.toLowerCase() !== 'netral') parts.push(t);
+
+    // length = add descriptors
+    if(len === 'medium') parts.push('cinematic, detailed');
+    if(len === 'long') parts.push('ultra-detailed, photorealistic, 8k, high detail');
+
+    // model hint (opsional)
+    if(m) parts.push(`model:${m}`);
+
+    // join jadi satu baris, bersih-bersihin spasi & koma ganda
+    let one = parts.join(', ').replace(/\s+,/g,',').replace(/,+\s*,+/g,', ').trim();
+
+    // polish: Capitalize first char
+    one = one.charAt(0).toUpperCase() + one.slice(1);
+
+    return one;
+  }
+
+  // non-image categories -> tetap versi panjang (seperti sebelumnya)
+  let prompt = '';
+  if(p) prompt += p + '\n\n';
+
+  if(cat === 'chat'){
+    prompt += `You are a helpful assistant.\nTask: ${g}.\n`;
+    if(d) prompt += `Context/details: ${d}.\n`;
+    prompt += `Tone: ${t}. Length: ${len}.\n`;
+    prompt += `Provide step-by-step answer and examples if relevant.`;
+    if(m) prompt = `Model: ${m}\n` + prompt;
+  } else if(cat === 'marketing'){
+    prompt += `Create ${len==='short'?'short':'detailed'} marketing copy based on: ${g}.\n`;
+    if(d) prompt += `Extra: ${d}.\n`;
+    prompt += `Tone: ${t}. Output: 3 variants (short headline, 2-line description, CTA).`;
+  } else if(cat === 'copy'){
+    prompt += `Write product copy: ${g}.\n`;
+    if(d) prompt += `Info: ${d}.\n`;
+    prompt += `Tone: ${t}. Format: bullets + 1 short paragraph.`;
+  } else if(cat === 'code'){
+    prompt += `Task: ${g}.\n`;
+    if(d) prompt += `Details: ${d}.\n`;
+    prompt += `Provide code examples, explanation, and complexity analysis. Format code blocks.`;
+    if(m) prompt = `Target runtime: ${m}\n` + prompt;
+  } else if(cat === 'resume'){
+    prompt += `Create a professional resume summary / bullets for: ${g}.\n`;
+    if(d) prompt += `Achievements/skills to highlight: ${d}.\n`;
+    prompt += `Tone: ${t}. Output: 3 variations (short, medium, long).`;
+  } else {
+    prompt = `${g}\n${d?d+'\n':''}Tone: ${t}\nLength: ${len}`;
+  }
+
+  // default return for non-image
+  return prompt;
+  }
+
 
   gen.addEventListener('click', ()=>{
     out.textContent = 'Membuat prompt...';
@@ -327,7 +332,7 @@
         category.value = t.category; tone.value = t.tone; goal.value = t.goal; detail.value = t.detail;
         lengthSel.value = t.length; model.value = t.model; prefix.value = t.prefix;
         renderChips();
-        out.textContent = 'Template loaded — tekan Generate.';
+        out.textContent = 'Template loaded â€” tekan Generate.';
       };
       const del = document.createElement('span'); del.textContent=' '; del.style.marginLeft='8px'; del.style.cursor='pointer';
       del.onclick = (e)=>{ e.stopPropagation(); const arr=loadTemplates(); arr.splice(i,1); saveTemplates(arr); };
@@ -364,4 +369,5 @@
 })();
 </script>
 </body>
+
 </html>
