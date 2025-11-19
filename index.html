@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TopUp Center — Demo</title>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background: #0b0f16;
+        color: #e6eef6;
+        padding: 20px;
+    }
+    .container {
+        max-width: 480px;
+        margin: auto;
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .card {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.15);
+        padding: 20px;
+        border-radius: 12px;
+        margin-top: 15px;
+        backdrop-filter: blur(10px);
+    }
+    select, input {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 8px;
+        color: #fff;
+    }
+    button {
+        width: 100%;
+        padding: 14px;
+        margin-top: 15px;
+        border: none;
+        background: #6c47ff;
+        color: #fff;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #7d56ff;
+    }
+    footer {
+        margin-top: 30px;
+        text-align: center;
+        opacity: 0.6;
+    }
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <h1>TopUp Center (Demo)</h1>
+
+    <div class="card">
+        <label>Pilih Game</label>
+        <select id="game">
+            <option value="ml">Mobile Legends</option>
+            <option value="ff">Free Fire</option>
+            <option value="gi">Genshin Impact</option>
+        </select>
+
+        <label>ID Player</label>
+        <input type="text" id="uid" placeholder="Contoh: 123456789" />
+
+        <label>Pilih Nominal</label>
+        <select id="nominal">
+            <option value="5000">5.000 — 11 Diamonds</option>
+            <option value="10000">10.000 — 23 Diamonds</option>
+            <option value="20000">20.000 — 46 Diamonds</option>
+            <option value="50000">50.000 — 140 Diamonds</option>
+        </select>
+
+        <button onclick="bayar()">Bayar Sekarang</button>
+    </div>
+
+    <div class="card" id="result" style="display:none;">
+        <h3>Pesanan Diterima!</h3>
+        <p id="orderText"></p>
+        <p><b>(Demo aja, tidak memproses pembayaran)</b></p>
+    </div>
+
+    <footer>© 2025 TopUp Center Demo</footer>
+
+</div>
+
+<script>
+function bayar() {
+    let game = document.getElementById("game").value;
+    let uid = document.getElementById("uid").value;
+    let nominal = document.getElementById("nominal").value;
+
+    if (uid === "") {
+        alert("Masukkan ID player dulu bro");
+        return;
+    }
+
+    let gameName = {
+        ml: "Mobile Legends",
+        ff: "Free Fire",
+        gi: "Genshin Impact"
+    }[game];
+
+    document.getElementById("result").style.display = "block";
+    document.getElementById("orderText").innerHTML =
+        `Game: <b>${gameName}</b><br>ID: <b>${uid}</b><br>Nominal: <b>Rp ${nominal}</b><br><br>Status: <span style="color:#6c47ff;">Menunggu Pembayaran</span>`;
+
+    window.scrollTo(0, document.body.scrollHeight);
+}
+</script>
+
+</body>
+</html>
